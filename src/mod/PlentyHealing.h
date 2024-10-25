@@ -2,14 +2,14 @@
 
 #include "ll/api/mod/NativeMod.h"
 
-namespace my_mod {
+namespace plenty_healing {
 
-class MyMod {
+class PlentyHealing {
 
 public:
-    static MyMod& getInstance();
+    static PlentyHealing& getInstance();
 
-    MyMod(ll::mod::NativeMod& self) : mSelf(self) {}
+    PlentyHealing(ll::mod::NativeMod& self) : mSelf(self) {}
 
     [[nodiscard]] ll::mod::NativeMod& getSelf() const { return mSelf; }
 
@@ -22,12 +22,8 @@ public:
     /// @return True if the mod is disabled successfully.
     bool disable();
 
-    // TODO: Implement this method if you need to unload the mod.
-    // /// @return True if the mod is unloaded successfully.
-    // bool unload();
-
 private:
     ll::mod::NativeMod& mSelf;
 };
 
-} // namespace my_mod
+} // namespace plenty_healing
