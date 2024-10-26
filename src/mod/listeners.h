@@ -1,12 +1,16 @@
+#pragma once
+
 #include "ll/api/event/player/PlayerJoinEvent.h"
 #include "ll/api/event/player/PlayerLeaveEvent.h"
+#include "ll/api/event/ListenerBase.h"
+#include <unordered_map>
 
 namespace listeners {
 using namespace ll::event;
 using namespace ll::event::player;
 
-ListenerPtr playerJoinListenerPtr;
-ListenerPtr playerLeftListenerPtr;
+extern std::shared_ptr<ListenerBase> playerJoinListenerPtr;
+extern std::shared_ptr<ListenerBase> playerLeftListenerPtr;
 
 void playerJoinListener(PlayerJoinEvent &event);
 
