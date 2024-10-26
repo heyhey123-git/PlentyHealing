@@ -1,8 +1,9 @@
 #pragma once
 
+#include "ll/api/event/ListenerBase.h"
 #include "ll/api/event/player/PlayerJoinEvent.h"
 #include "ll/api/event/player/PlayerLeaveEvent.h"
-#include "ll/api/event/ListenerBase.h"
+
 #include <unordered_map>
 
 namespace listeners {

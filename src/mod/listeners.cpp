@@ -10,21 +10,16 @@ std::shared_ptr<ListenerBase> playerJoinListenerPtr = nullptr;
 std::shared_ptr<ListenerBase> playerLeftListenerPtr = nullptr;
 
 void playerJoinListener(PlayerJoinEvent &event) {
-    auto plugin    = plenty_healing::PlentyHealing::getInstance();
-    auto map       = plugin.getTasksMap().lock();
-    auto scheduler = plugin.getScheduler();
-    auto uuid      = event.self().getUuid();
-    auto task      = std::make_shared<Task>(uuid, scheduler.lock());
-    map->insert({uuid, task});
+    auto uuid = event.self().getUuid();
+    auto map  = plenty_healing::PlentyHealing::getInstance().getTasksMap();
+    map.try_emplace(uuid, Task(uuid));
 }
 
 void playerLeftListener(PlayerLeaveEvent &event) {
-    auto plugin    = plenty_healing::PlentyHealing::getInstance();
-    auto map       = plugin.getTasksMap().lock();
-    auto scheduler = plugin.getScheduler();
-    auto uuid      = event.self().getUuid();
-    map->find(uuid)->second->cancel();
-    map->erase(uuid);
+    auto map  = plenty_healing::PlentyHealing::getInstance().getTasksMap();
+    auto uuid = event.self().getUuid();
+    map.find(uuid)->second.cancel();
+    map.erase(uuid);
 }
 
 void registerListeners() {
@@ -43,11 +38,7 @@ void registerListeners() {
 
 void unRegisterListeners() {
     auto &eventBus = EventBus::getInstance();
-
     eventBus.removeListener(playerJoinListenerPtr);
     eventBus.removeListener(playerLeftListenerPtr);
-
-    playerJoinListenerPtr.reset();
-    playerLeftListenerPtr.reset();
 }
 } // namespace listeners

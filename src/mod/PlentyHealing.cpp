@@ -7,7 +7,7 @@
 #include <memory>
 
 namespace plenty_healing {
-    using tasks_map = std::unordered_map<mce::UUID, std::shared_ptr<Task>>;
+using tasks_map = std::unordered_map<mce::UUID, Task>;
 
 static std::unique_ptr<PlentyHealing> instance;
 
@@ -17,23 +17,23 @@ bool PlentyHealing::load() { return true; }
 
 bool PlentyHealing::enable() {
     listeners::registerListeners();
-    tasksMap = std::make_shared<tasks_map>();
+    tasksMap.emplace();
     return true;
 }
 
 bool PlentyHealing::disable() {
     listeners::unRegisterListeners();
     for (auto &pair : *tasksMap) {
-        pair.second->cancel();
+        pair.second.cancel();
     }
     tasksMap.reset();
 
     return true;
 }
 
-std::weak_ptr<tasks_map> PlentyHealing::getTasksMap() { return this->tasksMap; }
+tasks_map &PlentyHealing::getTasksMap() { return tasksMap.value(); }
 
-std::weak_ptr<ll::schedule::GameTickScheduler> PlentyHealing::getScheduler() { return this->scheduler; }
+ll::schedule::GameTickScheduler &PlentyHealing::getScheduler() { return scheduler.value(); }
 
 } // namespace plenty_healing
 

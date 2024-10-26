@@ -2,19 +2,20 @@
 
 #include "Task.h"
 #include "ll/api/mod/NativeMod.h"
-
 #include "ll/api/schedule/Scheduler.h"
 #include "mc/deps/core/mce/UUID.h"
+
 #include <unordered_map>
 
 namespace plenty_healing {
-    using tasks_map = std::unordered_map<mce::UUID, std::shared_ptr<Task>>;
+
 class PlentyHealing {
+    using tasks_map = std::unordered_map<mce::UUID, Task>;
 
 public:
     static PlentyHealing &getInstance();
 
-    PlentyHealing(ll::mod::NativeMod &self) : mSelf(self) {}
+    PlentyHealing(ll::mod::NativeMod &self) : mSelf(self) {};
 
     [[nodiscard]] ll::mod::NativeMod &getSelf() const { return mSelf; }
 
@@ -27,16 +28,16 @@ public:
     /// @return True if the mod is disabled successfully.
     bool disable();
 
-    std::weak_ptr<tasks_map> getTasksMap();
+    tasks_map &getTasksMap();
 
-    std::weak_ptr<ll::schedule::GameTickScheduler> getScheduler();
+    ll::schedule::GameTickScheduler &getScheduler();
 
 private:
     ll::mod::NativeMod &mSelf;
 
-    std::shared_ptr<ll::schedule::GameTickScheduler> scheduler;
+    std::optional<ll::schedule::GameTickScheduler> scheduler;
 
-    std::shared_ptr<tasks_map> tasksMap;
+    std::optional<tasks_map> tasksMap;
 };
 
 } // namespace plenty_healing

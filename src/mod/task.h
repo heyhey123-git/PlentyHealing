@@ -2,6 +2,7 @@
 
 #include "ll/api/schedule/Scheduler.h"
 #include "mc/deps/core/mce/UUID.h"
+
 #include <unordered_map>
 
 class Task {
@@ -10,9 +11,11 @@ class Task {
 public:
     Task() = delete;
 
-    Task(const Task&) = delete;
+    Task(const Task &) noexcept = default;
 
-    Task(mce::UUID playerID, std::shared_ptr<t_scheduler> scheduler);
+    Task(Task &&) noexcept = default;
+
+    Task(mce::UUID playerID);
 
     void execute();
 
@@ -20,8 +23,6 @@ public:
 
 private:
     mce::UUID playerID;
-
-    std::shared_ptr<t_scheduler> scheduler;
 
     std::shared_ptr<ll::schedule::task::Task<ll::chrono::GameTickClock>> thisTask;
 };
