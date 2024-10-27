@@ -12,13 +12,13 @@ std::shared_ptr<ListenerBase> playerLeftListenerPtr = nullptr;
 void playerJoinListener(PlayerJoinEvent &event) {
     auto uuid = event.self().getUuid();
     auto map  = plenty_healing::PlentyHealing::getInstance().getTasksMap();
-    map.try_emplace(uuid, Task(uuid));
+    map.try_emplace(uuid, std::make_shared<Task>(uuid));
 }
 
 void playerLeftListener(PlayerLeaveEvent &event) {
     auto map  = plenty_healing::PlentyHealing::getInstance().getTasksMap();
     auto uuid = event.self().getUuid();
-    map.find(uuid)->second.cancel();
+    map.find(uuid)->second->cancel();
     map.erase(uuid);
 }
 

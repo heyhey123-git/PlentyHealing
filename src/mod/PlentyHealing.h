@@ -10,7 +10,7 @@
 namespace plenty_healing {
 
 class PlentyHealing {
-    using tasks_map = std::unordered_map<mce::UUID, Task>;
+    using tasks_map = std::unordered_map<mce::UUID, std::shared_ptr<Task>>;
 
 public:
     static PlentyHealing &getInstance();

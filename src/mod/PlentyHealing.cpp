@@ -7,7 +7,7 @@
 #include <memory>
 
 namespace plenty_healing {
-using tasks_map = std::unordered_map<mce::UUID, Task>;
+using tasks_map = std::unordered_map<mce::UUID, std::shared_ptr<Task>>;
 
 static std::unique_ptr<PlentyHealing> instance;
 
@@ -24,7 +24,7 @@ bool PlentyHealing::enable() {
 bool PlentyHealing::disable() {
     listeners::unRegisterListeners();
     for (auto &pair : *tasksMap) {
-        pair.second.cancel();
+        pair.second->cancel();
     }
     tasksMap.reset();
 
