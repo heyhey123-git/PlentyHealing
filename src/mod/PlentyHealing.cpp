@@ -15,9 +15,11 @@ PlentyHealing &PlentyHealing::getInstance() { return *instance; }
 
 bool PlentyHealing::load() { return true; }
 
+
 bool PlentyHealing::enable() {
-    listeners::registerListeners();
     tasksMap.emplace();
+    scheduler.emplace();
+    listeners::registerListeners();
     return true;
 }
 
@@ -27,6 +29,7 @@ bool PlentyHealing::disable() {
         pair.second->cancel();
     }
     tasksMap.reset();
+    scheduler.reset();
 
     return true;
 }

@@ -28,12 +28,10 @@ void registerListeners() {
     auto joinListener =
         eventBus.emplaceListener<PlayerJoinEvent>([](PlayerJoinEvent &event) { playerJoinListener(event); });
     playerJoinListenerPtr = joinListener;
-    eventBus.addListener(joinListener);
 
     auto leftListener =
         eventBus.emplaceListener<PlayerLeaveEvent>([](PlayerLeaveEvent &event) { playerLeftListener(event); });
     playerLeftListenerPtr = leftListener;
-    eventBus.addListener(leftListener);
 }
 
 void unRegisterListeners() {

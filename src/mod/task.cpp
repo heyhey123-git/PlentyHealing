@@ -7,7 +7,6 @@
 #include "mc/world/attribute/AttributeInstance.h"
 #include "mc/world/level/level.h"
 
-#include <cmath>
 
 Task::Task(mce::UUID playerID) : playerID(playerID) {
     this->thisTask = plenty_healing::PlentyHealing::getInstance().getScheduler().add<ll::schedule::task::RepeatTask>(
@@ -22,6 +21,7 @@ void Task::execute() {
     auto  hunger     = player->getMutableAttribute(Player::HUNGER)->getCurrentValue();
     auto  health     = player->getHealth();
     auto  maxHealth  = player->getMaxHealth();
+
     if (hunger != 20 || saturation == 0 || health == maxHealth) return;
     player->heal(1);
     auto exhaustion = player->getMutableAttribute(Player::EXHAUSTION);
