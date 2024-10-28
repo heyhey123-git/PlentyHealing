@@ -1,28 +1,22 @@
-# LeviLamina Mod Template
+# Plenty Healing
 
-A LeviLamina mod template
-
-This mod is a template for developing LeviLamina mods.
+This mod restores a feature from the Java Edition: when you have excess saturation, that saturation will help you heal faster.
 
 ## Install
 
-Generate a new repository from this template.
+- Install by lip:
 
-## Usage
+```bash
+lip install github.com/heyhey123-git/plenty-healing
+```
 
-Before using this mod template, make sure that you have installed XMake and a Minecraft Bedrock Server with LeviLamina.
+- Download manually from release :
 
-1. Clone the new repository into a local folder.
+After downloading the .zip archive from the release, unzip it and place it in the /plugins folder.
 
-1. Change the mod name and the expected LeviLamina version in `xmake.lua`.
+## Show
 
-1. Add your code.
-
-1. Run `xmake repo -u` in the root of the repository.
-
-1. Run `xmake` to build the mod.
-
-Now the build is complete at `bin/`.
+![Usage Image]([MineBBS]-效果.gif)
 
 ## Contributing
 
@@ -32,4 +26,4 @@ PRs accepted.
 
 ## License
 
-CC0-1.0 © LiteLDev
+GPL-3.0
