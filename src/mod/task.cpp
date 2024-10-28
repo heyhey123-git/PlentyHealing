@@ -5,30 +5,42 @@
 #include "mc/world/actor/player/Player.h"
 #include "mc/world/attribute/Attribute.h"
 #include "mc/world/attribute/AttributeInstance.h"
+#include "mc/world/attribute/SharedAttributes.h"
 #include "mc/world/level/level.h"
 
+#include <cmath>
 
-Task::Task(mce::UUID playerID) : playerID(playerID) {
-    this->thisTask = plenty_healing::PlentyHealing::getInstance().getScheduler().add<ll::schedule::task::RepeatTask>(
-        std::chrono::milliseconds(500),
-        [this]() { this->execute(); }
-    );
+namespace task {
+    
+    std::shared_ptr<ll::schedule::task::Task<ll::chrono::GameTickClock>> thisTask;
+
+    std::optional<ll::schedule::GameTickScheduler> scheduler;
+
+void execute() {
+    ll::service::getLevel()->forEachPlayer([](Player &player) -> bool {
+        auto saturation = player.getMutableAttribute(Player::SATURATION)->getCurrentValue();
+        auto hunger     = player.getMutableAttribute(Player::HUNGER)->getCurrentValue();
+        auto health     = player.getHealth();
+        auto maxHealth  = player.getMaxHealth();
+
+        if (hunger != 20 || saturation == 0 || health == maxHealth) return true;
+
+        player.getMutableAttribute(SharedAttributes::HEALTH)->setCurrentValue(fmin(maxHealth, health + 1));
+        auto exhaustion = player.getMutableAttribute(Player::EXHAUSTION);
+        exhaustion->setCurrentValue(fmin(exhaustion->getCurrentValue() + 6, exhaustion->getMaxValue()));
+        return true;
+    });
 }
 
-void Task::execute() {
-    auto *player     = ll::service::getLevel()->getPlayer(this->playerID);
-    auto  saturation = player->getMutableAttribute(Player::SATURATION)->getCurrentValue();
-    auto  hunger     = player->getMutableAttribute(Player::HUNGER)->getCurrentValue();
-    auto  health     = player->getHealth();
-    auto  maxHealth  = player->getMaxHealth();
-
-    if (hunger != 20 || saturation == 0 || health == maxHealth) return;
-    player->heal(1);
-    auto exhaustion = player->getMutableAttribute(Player::EXHAUSTION);
-    exhaustion->setCurrentValue(exhaustion->getCurrentValue() + 6);
+void registerTask() {
+    scheduler.emplace();
+    thisTask = scheduler->add<ll::schedule::task::RepeatTask>(ll::chrono::ticks(10), execute);
 }
 
-void Task::cancel() {
-    this->thisTask->cancel();
-    plenty_healing::PlentyHealing::getInstance().getScheduler().remove(this->thisTask);
+void unregisterTask() {
+    thisTask->cancel();
+    thisTask.reset();
+    scheduler.reset();
 }
+
+} // namespace task

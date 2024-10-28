@@ -5,24 +5,18 @@
 
 #include <unordered_map>
 
-class Task {
+namespace task {
+
     using t_scheduler = ll::schedule::GameTickScheduler;
 
-public:
-    Task() = delete;
+    extern std::shared_ptr<ll::schedule::task::Task<ll::chrono::GameTickClock>> thisTask;
 
-    Task(const Task &) noexcept = default;
+    extern std::optional<ll::schedule::GameTickScheduler> scheduler;
 
-    Task(Task &&) noexcept = default;
+    void registerTask();
 
-    Task(mce::UUID playerID);
+    void unregisterTask();
 
     void execute();
 
-    void cancel();
-
-private:
-    mce::UUID playerID;
-
-    std::shared_ptr<ll::schedule::task::Task<ll::chrono::GameTickClock>> thisTask;
 };
